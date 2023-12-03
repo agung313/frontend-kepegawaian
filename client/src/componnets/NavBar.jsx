@@ -1,13 +1,26 @@
 import { AppBar, Button, Grid, Stack, Toolbar, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { AssistIdLogo } from '../assets/img'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { AdminPanelSettings, CalendarMonth, FacebookRounded, HealthAndSafety, Instagram, Twitter } from '@mui/icons-material'
+import { useDispatch, useSelector } from 'react-redux'
+import { getToken } from './redux/selectors'
 
 const NavBar = () => {
+    const navigate = useNavigate()
+    const token = useSelector(getToken);
     useEffect(()=>{
+        if (!token) {
+           navigate('/');
+        }
         fetchCurrentDate(); 
     },[])
+
+    const handleLogout = () => {
+        localStorage.removeItem('username');
+        localStorage.removeItem('token');
+        navigate('/');
+    };
 
     
 
@@ -72,14 +85,14 @@ const NavBar = () => {
                             </Link>
                         </Button>
 
-                        <Button style={{width:"auto", height:"auto", borderRadius:50, backgroundColor:currentUrl=="/settings"?"#2a66ae":"none", padding:"0.2vw 1vw",}}>
+                        <Button style={{width:"auto", height:"auto", borderRadius:50,  padding:"0.2vw 1vw",}} onClick={handleLogout}>
 
-                            <Link to={'/'} style={{display:"flex", alignItems:"center"}}>
-                                <AdminPanelSettings fontSize='medium' sx={{color:currentUrl=="/settings"?"#fff":"#000", width:"auto", marginRight:"0.5vw"}}/>
-                                <Typography fontSize={"1vw"} textTransform={"capitalize"} color={currentUrl=="/settings"?"white":"black"} fontWeight={"bold"}>
-                                    Settings
+                            <div style={{display:"flex", alignItems:"center"}}>
+                                <AdminPanelSettings fontSize='medium' sx={{color:"#000", width:"auto", marginRight:"0.5vw"}}/>
+                                <Typography fontSize={"1vw"} textTransform={"capitalize"} color={"black"} fontWeight={"bold"}>
+                                    Logout
                                 </Typography>
-                            </Link>
+                            </div>
                         </Button>
                     </Grid>
                     <Grid item ml={currentUrl=="/"?0:"auto"}>

@@ -1,18 +1,59 @@
 import { Height } from '@mui/icons-material'
 import { Button, Container, Grid, Paper, TextField, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import NavBar from '../componnets/NavBar'
 import { AssistIdLogo, Background1, Background2 } from '../assets/img'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { getPassword, getToken, getUsername } from '../componnets/redux/selectors'
+import { ThreeCircles } from 'react-loader-spinner'
+import { v4 as uuidv4 } from 'uuid';
+import { login, logout } from '../componnets/redux/actions'
 
 export const HomeBase = () => {
     const navigate = useNavigate()
-    const [loginStatus, setLoginStatus] = useState(false)
-    console.log(loginStatus,"ini loginstatus");
+    const dispatch = useDispatch();
+    const [localUsername, setLocalUsername] = useState('');
+    const [localPassword, setLocalPassword] = useState('');
+    const [localToken, setLocalToken] = useState('');
+    const username = useSelector(getUsername);
+    const password = useSelector(getPassword);
+    const token = useSelector(getToken);
+    console.log(token,"ini token");
+    const [errorLogin, setErrorLogin] = useState(false)
+    const [loadLogin, setLoadLogin] = useState(false)
 
-    const loginAdmin = async data =>{
-        navigate("/admin")
-    }
+    // console.log(localToken,"<local token");
+    const tokenLogin = localStorage.getItem('token');
+    console.log(tokenLogin,"ini token login");
+
+    useEffect(() => {
+        if (token) {
+          navigate('/admin');
+        }
+    }, []);
+
+    const [loginStatus, setLoginStatus] = useState(false)
+
+    const handleLogin = () => {
+        setLoadLogin(true)
+        if(localUsername!="admin"||localPassword!="admin"){
+            setErrorLogin(true)
+            setLoadLogin(false)
+        }else{
+            const newToken = uuidv4();
+            // setLocalToken(newToken);
+            dispatch(login(localUsername, localPassword, newToken));
+            localStorage.setItem('username', localUsername);
+            localStorage.setItem('token', newToken);
+            setLoadLogin(false)
+            navigate("/admin");
+        }
+    
+    };
+
+    
+    
     
     return (
         <>
@@ -52,21 +93,28 @@ export const HomeBase = () => {
                                 </Typography>
                             </div>
 
-                            <Typography textAlign={"center"} fontSize={"0.9vw"} fontWeight={700} color={"#000"} fontFamily={"sans-serif"} textTransform={"capitalize"} marginBottom={"4vh"}>Silakan Masukan Username dan Password Anda</Typography>
+                            <div style={{marginBottom:"4vh"}}>
+
+                                <Typography textAlign={"center"} fontSize={"0.9vw"} fontWeight={700} color={"#000"} fontFamily={"sans-serif"} textTransform={"capitalize"} >Silakan Masukan Username dan Password Anda</Typography>
+                                <Typography textAlign={"center"} fontSize={"0.9vw"} fontWeight={700} color={"red"} fontFamily={"sans-serif"} textTransform={"capitalize"} sx={{display:errorLogin==true?"block":"none"}}>Username atau Password Anda Salah</Typography>
+                            </div>
 
                             <div>
-                                <TextField id="username" label="Username" variant="outlined" fullWidth sx={{marginBottom:"3vh"}} />
-                                <TextField id="password" label="Password" variant="outlined" fullWidth type='password' sx={{marginBottom:"3vh"}}/>
-                                <Button fullWidth variant="contained" padding="1vw" onClick={loginAdmin}>
-                                    <Typography fontSize={"1vw"} fontWeight={800} textTransform={"capitalize"}>Login</Typography>
+                                <TextField id="username" label="Username : admin" variant="outlined" fullWidth sx={{marginBottom:"3vh"}} onChange={(e)=>setLocalUsername(e.target.value)}/>
+                                <TextField id="password" label="Password : admin" variant="outlined" fullWidth type='password' sx={{marginBottom:"3vh"}} onChange={(e)=>setLocalPassword(e.target.value)}/>
+                                <Button fullWidth variant="contained" padding="1vw" onClick={handleLogin}>
+                                    <ThreeCircles 
+                                        width='50'
+                                        height="50"
+                                        color="#fff"
+                                        visible={loadLogin==true?true:false}
+                                    />
+                                    <Typography fontSize={"1vw"} fontWeight={800} textTransform={"capitalize"} sx={{display:loadLogin==true?"none":"flex"}}>Login</Typography>
                                 </Button>
                             </div>
 
                             <Typography textAlign={"center"} fontSize={"0.9vw"} fontWeight={700} color={"#000"} fontFamily={"sans-serif"} textTransform={"capitalize"} marginTop={"4vh"} >
-                                Belum Memiliki Akun ? 
-                                <span>
-                                    <Button><Typography fontSize={"1vw"} fontWeight={800} textTransform={"capitalize"}>Sign Up</Typography></Button>
-                                </span>
+                                Solusi Kelola Fasilitas Kesehatan Indonesia 
                             </Typography>
                         </Paper>
 
