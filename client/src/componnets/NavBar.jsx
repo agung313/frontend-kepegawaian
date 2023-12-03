@@ -5,30 +5,43 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { AdminPanelSettings, CalendarMonth, FacebookRounded, HealthAndSafety, Instagram, Twitter } from '@mui/icons-material'
 import { useDispatch, useSelector } from 'react-redux'
 import { getToken } from './redux/selectors'
+import { logout } from './redux/actions'
 
 const NavBar = () => {
     const navigate = useNavigate()
+    
+    const dispatch = useDispatch();
     const token = useSelector(getToken);
     useEffect(()=>{
-        if (!token) {
-           navigate('/');
-        }
-        fetchCurrentDate(); 
+        cekToken();fetchCurrentDate(); 
     },[])
-
-    const handleLogout = () => {
-        localStorage.removeItem('username');
-        localStorage.removeItem('token');
-        navigate('/');
-    };
 
     
 
+    const handleLogout = () => {
+        dispatch(logout());
+        localStorage.removeItem('username');
+        localStorage.removeItem('token');
+    
+        navigate('/');
+      };
+    
+    
+    
     const [currentDate, setCurrentDate] = useState('')
     const location = useLocation();
     const currentUrl = location.pathname;
     // console.log(currentUrl);
-
+    
+    const cekToken = () =>{
+        if(currentUrl=="/"){
+            console.log(token,"data token navbar");
+        }else{
+            if (!token) {
+                navigate('/');
+             }
+        }
+    }
     const fetchCurrentDate = () => {
         const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
         const months = [

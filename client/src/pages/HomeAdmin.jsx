@@ -5,13 +5,24 @@ import { Alert, Autocomplete, Box, Button, MenuItem, Modal, Paper, TextField, Ty
 import { Badge, Cancel, Delete, DeleteOutline, DriveFileRenameOutline, LocationOnOutlined, MapOutlined, SettingsApplications } from '@mui/icons-material';
 import axios from 'axios';
 import { ThreeCircles } from  'react-loader-spinner'
+import { useSelector } from 'react-redux';
+import { getToken } from '../componnets/redux/selectors';
+import { useNavigate } from 'react-router-dom';
 
 const HomeAdmin = () => {
     document.title = "Assist.id - Beranda Admin"
+    const token = useSelector(getToken);
+    const navigate = useNavigate()
 
     useEffect(()=>{
-        getPegawai();getProv();
+        cekToken();getPegawai();getProv();
     },[])
+
+    const cekToken = () =>{
+        if (!token) {
+            navigate('/');
+        }
+    }
 
     
 
