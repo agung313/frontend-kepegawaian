@@ -9,6 +9,10 @@ export const HomeBase = () => {
     const navigate = useNavigate()
     const [loginStatus, setLoginStatus] = useState(false)
     console.log(loginStatus,"ini loginstatus");
+
+    const loginAdmin = async data =>{
+        navigate("/admin")
+    }
     
     return (
         <>
@@ -53,7 +57,7 @@ export const HomeBase = () => {
                             <div>
                                 <TextField id="username" label="Username" variant="outlined" fullWidth sx={{marginBottom:"3vh"}} />
                                 <TextField id="password" label="Password" variant="outlined" fullWidth type='password' sx={{marginBottom:"3vh"}}/>
-                                <Button fullWidth variant="contained" padding="1vw">
+                                <Button fullWidth variant="contained" padding="1vw" onClick={loginAdmin}>
                                     <Typography fontSize={"1vw"} fontWeight={800} textTransform={"capitalize"}>Login</Typography>
                                 </Button>
                             </div>

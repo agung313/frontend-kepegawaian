@@ -1,13 +1,15 @@
-import { AppBar, Grid, Stack, Toolbar, Typography } from '@mui/material'
+import { AppBar, Button, Grid, Stack, Toolbar, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { AssistIdLogo } from '../assets/img'
-import { useLocation } from 'react-router-dom'
-import { CalendarMonth, FacebookRounded, Instagram, Twitter } from '@mui/icons-material'
+import { Link, useLocation } from 'react-router-dom'
+import { AdminPanelSettings, CalendarMonth, FacebookRounded, HealthAndSafety, Instagram, Twitter } from '@mui/icons-material'
 
 const NavBar = () => {
     useEffect(()=>{
         fetchCurrentDate(); 
     },[])
+
+    
 
     const [currentDate, setCurrentDate] = useState('')
     const location = useLocation();
@@ -42,7 +44,7 @@ const NavBar = () => {
     };
     return (
         <>
-            <div style={{height:"auto", width:"100vw", marginBottom:"5vh", position:"absolute"}}>
+            <div style={{height:"auto", width:"100vw",  position:currentUrl=="/"?"absolute":"none",}}>
                 <Grid container direction="row" gap={10} alignItems="center" px="2vw" py="1vw">
                     <Grid item>
                         <Stack
@@ -58,7 +60,29 @@ const NavBar = () => {
                             </Typography>
                         </Stack>
                     </Grid>
-                    <Grid item >
+                    <Grid item gap={5} sx={{display: currentUrl=="/"?"none":"flex"}}>
+
+                        <Button style={{width:"auto", height:"auto", borderRadius:50, backgroundColor:currentUrl=="/admin"?"#2a66ae":"none", padding:"0.2vw 1vw"}}>
+
+                            <Link to={'/'} style={{display:"flex", alignItems:"center"}}>
+                                <HealthAndSafety fontSize='medium' sx={{color:currentUrl=="/admin"?"#fff":"#000", width:"auto", marginRight:"0.5vw"}}/>
+                                <Typography fontSize={"1vw"} textTransform={"capitalize"} color={currentUrl=="/admin"?"white":"black"} fontWeight={"bold"}>
+                                    Beranda
+                                </Typography>
+                            </Link>
+                        </Button>
+
+                        <Button style={{width:"auto", height:"auto", borderRadius:50, backgroundColor:currentUrl=="/settings"?"#2a66ae":"none", padding:"0.2vw 1vw",}}>
+
+                            <Link to={'/'} style={{display:"flex", alignItems:"center"}}>
+                                <AdminPanelSettings fontSize='medium' sx={{color:currentUrl=="/settings"?"#fff":"#000", width:"auto", marginRight:"0.5vw"}}/>
+                                <Typography fontSize={"1vw"} textTransform={"capitalize"} color={currentUrl=="/settings"?"white":"black"} fontWeight={"bold"}>
+                                    Settings
+                                </Typography>
+                            </Link>
+                        </Button>
+                    </Grid>
+                    <Grid item ml={currentUrl=="/"?0:"auto"}>
                         <Stack
                             direction="row"
                             justifyContent="center"
@@ -70,9 +94,9 @@ const NavBar = () => {
                             <Typography     fontSize={"1.2vw"} color="black" fontWeight={"bold"}>
                                 {currentDate}
                             </Typography>
-                            <FacebookRounded fontSize='large' sx={{color:"#000", width:"auto", height:"3vh"}}/>
-                            <Twitter fontSize='large' sx={{color:"#000", width:"auto", height:"3vh"}}/>
-                            <Instagram fontSize='large' sx={{color:"#000", width:"auto", height:"3vh"}}/>
+                            <FacebookRounded fontSize='large' sx={{color:"#000", width:"auto"}}/>
+                            <Twitter fontSize='large' sx={{color:"#000", width:"auto"}}/>
+                            <Instagram fontSize='large' sx={{color:"#000", width:"auto"}}/>
                         </Stack>
                     </Grid>
 
